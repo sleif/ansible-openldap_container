@@ -277,7 +277,7 @@
     state: true
     persistent: true
   when:
-    - ansible_selinux and ansible_selinux.status == "enabled"
+    - ansible_facts.selinux and ansible_facts.selinux.status == "enabled"
   tags:
     - openldap_backup_selinux
 
@@ -291,7 +291,7 @@
   with_items:
     - {target: '{{ _container_storage_dir_base }}/{{ openldap_container_name }}_backups(/.*)?', setype: 'var_log_t', state: 'present'}
   when:
-    - ansible_selinux and ansible_selinux.status == "enabled"
+    - ansible_facts.selinux and ansible_facts.selinux.status == "enabled"
   tags:
     - openldap_backup_selinux
 
@@ -302,7 +302,7 @@
     - {index: 0, target: '{{ _container_storage_dir_base }}/{{ openldap_container_name }}_backups'}
   when:
     - filecontext.results[item.index] is changed or _backup_dir_create.changed | bool
-    - ansible_selinux and ansible_selinux.status == "enabled"
+    - ansible_facts.selinux and ansible_facts.selinux.status == "enabled"
   register: _result
   changed_when: _result.rc != 0
   tags:
